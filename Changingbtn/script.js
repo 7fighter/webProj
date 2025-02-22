@@ -1,7 +1,7 @@
 var istatus = document.querySelector("#status")
-var ibuy = document.querySelector("#btn")
+var ibuy = document.querySelector("#btn")   
 var acart = document.querySelector("#btn2") 
-ibuy.addEventListener("click", function(){
+ibuy.addEventListener("click", function(){   //or () => {}
     istatus.innerHTML = "Sold Out"
     istatus.style.color = "red"
 })
