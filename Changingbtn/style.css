@@ -1,0 +1,71 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Franklin Gothic Mediu';
+}
+
+html, body{
+    height: 100%;
+    width: 100%;
+}
+
+body{
+    display: flex; /*flex is used to align items in center */
+    justify-content: center;
+    align-items: center;
+    background-color: cornflowerblue;
+}
+
+#card{
+    height: 400px;
+    width: 300px;
+    background-color: black;
+    border-radius: 10px;
+    padding: 30px; /*yh v parent main dyi */
+    text-align: center; /*center text without this will show text in left  */  
+}
+
+#card img{
+    height: 50%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 10px;
+}
+
+#card h1{
+    color: white;
+    font-size: 24px;
+    margin: 10px 0;
+}
+#card h5{
+    color: white;
+    font-size: 24px;
+    margin: 10px 0;
+}
+#card #status{
+    color: white;
+    font-size: 40px;
+    margin: 10px 0;
+}
+
+
+#btn_container #btn {
+    font-size: 15px;
+    color: white;
+    background-color: red;
+    margin : 10px 0;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 10px;
+}
+#btn_container #btn2 {
+    font-size: 15px;
+    color: white;
+    background-color: rgb(16, 194, 16);
+    margin : 10px 0;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 10px;
+}

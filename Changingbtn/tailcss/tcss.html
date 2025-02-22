@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="flex items-center justify-center min-h-screen w-screen bg-blue-500">
+<!-- is ki joo classes hain they accept vaalue in fraction h-6/12 etc for giving value in pixel we used style  -->
+    <div id="card" class="bg-black rounded-lg p-8 text-center" style= height:400px width: 300px>
+        <img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Bike" class="h-1/2 w-full object-cover rounded-lg mb-4">    
+        <h1 class="text-white text-2xl mb-2">Mountain Bike</h1>
+        <h5 class="text-white text-lg mb-2">Status: <span id="status" class="text-4xl">Available</span></h5>
+        <div id="btn_container" class="space-x-2">
+            <button id="btn" class="bg-red-500 text-white py-2 px-4 rounded">Buy Now</button>
+            <button id="btn2" class="bg-green-500 text-white py-2 px-4 rounded">Add to Cart</button>
+        </div>
+    </div>
+
+    <script>
+        var istatus = document.querySelector("#status");
+        var ibuy = document.querySelector("#btn");
+        var acart = document.querySelector("#btn2");
+
+        ibuy.addEventListener("click", function() {
+            istatus.innerHTML = "Sold Out";
+            istatus.style.color = "red";
+        });
+
+        acart.addEventListener("click", function() {
+            istatus.innerHTML = "Hurry Up! only 1 left";
+            istatus.style.fontSize = "text-xl";
+            istatus.style.color = "blue";
+        });
+    </script>
+</body>
+</html>
