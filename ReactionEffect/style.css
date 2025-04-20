@@ -1,0 +1,64 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body{ /*html or body dono ka size 100% krna ka lyia */
+    height: 100%;
+    width: 100%;
+}
+/* body{
+    height:100%;
+    width:100%;
+} */
+#heading{
+    height: 50px;
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    position: absolute;
+    top: 82%;
+
+} 
+
+main{
+    background: #000;
+    height: 100%;
+    width: 100%;
+/* center main lana ka lyia yh too yh necha wala code main wala nhi to phir container ka andr absolute sy necha necha wala  */
+    /* yh sari joo v cheeza is main ka andr hain us sb ko center main ly ga  */
+    display: flex;
+    justify-content: center;   
+     align-items: center; 
+}
+
+#container{   
+   background-color: aqua;
+   height : 400px;
+    width : 300px;
+    border-radius: 10px;
+    overflow: hidden; /*pic within frame raha gyi or us border radius v nazar ata rah ga */
+    /* absolute sy necha ka kam v cener main he lana hain  but yh aik makhsoos ko hawa main utha kr center main la rah */
+    /* yh sirf aik makhsoos ko utha kr center kra ga bakio ko nhi chara ga  */
+    /* position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+}
+#modelPic{
+    height: 100%;
+    width: 100%;
+    object-fit: cover; /*without this pic dabhi dabhi nazar ay gyi*/
+    object-position: center; /*without this andhi pic cut jy gyi*/
+}
+#container i{ /* container ka andr joo i tag hain woo  or bracket ka andr ka css sirf i pr laga ga */
+    position : absolute;
+    top: 50%; /*is ka sath parent ka position relative ka talq hain */
+    left :50%;
+    color : #fff;  /*font wali cmd chaly gyi is pr */
+    font-size: 80px; /*icon ka size*/
+    transform: translate(-50%, -50%) scale(0); /*scale(0) is sy ghaib kr dyia dil(bilkul chota kr dyia)*/
+    opacity: 0.8; /*jb vsisble hoo tb v thora transparent sa he nazar ay */
+    transition: all ease 0.5s; /*icon ka size change hony main 0.5s ka time laga dyia */
+}
+
