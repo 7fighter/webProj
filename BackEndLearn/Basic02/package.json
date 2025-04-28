@@ -1,0 +1,17 @@
+{
+  "name": "Basic02",
+  "version": "1.0.0",
+  "description": "actaully used for production http is't used in production, it is external so let's install forst \r ```cmd \r npm i express  // notapplied yet\r ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "morgan": "^1.10.0"
+  }
+}
