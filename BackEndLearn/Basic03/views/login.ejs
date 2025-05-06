@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up</title>
+  <link rel = "stylesheet" href = "/login/login.css"> <!-- link to css file for styling the page -->
+</head>
+
+<body>
+  <div class="login-container">
+    <h1>Login</h1>
+    <form action="/getFormData" method="post">  <!-- name of post rout which we created in app.js--> 
+      <input type="text" name="email" placeholder="Enter email" required /> <!--name is realy imp bcz backend pr yh he name as a attribute ata hain (similar to dbs attribute ) -->
+      <input type="password" name="password" placeholder="Enter Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <div>
+      <a href="/siginup">Login</a>
+      <a href="/">Home</a>
+    </div>
+  </div>
+</body>
+<script src="/login/login.js"></script>
+</html>
