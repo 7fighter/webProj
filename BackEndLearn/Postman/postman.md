@@ -1,5 +1,6 @@
 downoad the postman on pc first 
 
+this md file is built during work on the uber video 
 ## for implying checking the register router 
 
 1. enter the usrl http://localhost:4000/users/register
@@ -9,7 +10,7 @@ downoad the postman on pc first
 ![registerRoute](Images/reg.png)
 
 ## for login route 
-same as the reg
+same as the reg just put login data under the body raw 
 
 ## for profile and the header button in postman 
 basically here we are going to mix with logout so time to live ttl acookies and header etc will included 
@@ -32,13 +33,17 @@ this above dat needs to be get inputed
 ![alt text](Images\getProfileUsingHeder.png)
 
 ## profile fetch using cookies 
-`note` send req twice for cookies, and when you click on the cookie that is on the left side the iamage similar to the attached photo will be shwon to you 
+`note` send req twice for cookies(yani send ki button ko twice click), and when you click on the cookie that is on the left side the iamage similar to the attached photo will be shwon to you 
 ![alt text](Images/cookieAuth.png)
 
+`note` if you want the same url window of postman (means both header and cookie in one window )then if you check response through the header first then must uncheck the Authorization that is set in the header so that you can se you will get the respose no matter if you don't set data in the header bcz token is in the cookie 
+
 # tips
+
+###### use the top plus sign diff windows got opened and we hit them for testing 
 ### post get, which one at what time 
-`post` - for login and register we use post route, bcz data is being send to the sserver 
-`get`  - for profile, bcz here we are fetching things from server 
+`post` - for login and register etc we use post route, bcz data is being send to the server 
+`get`  - for profile and logout etc , bcz here we are fetching things from server 
 #### for resuing the url again and agian  
 
 just select the url part and then right click then click `setVariable` now give it the name 
@@ -49,4 +54,10 @@ you will get it when you send login or register req at that time in the respose 
 ###### use the top plus sign diff windows got opened and we hit them for testing 
 
 
+### create a vairiable of the url 
+1. select the url part using the mouse or a drag
+2. then right click and choose set as variable 
+3. now to use it just `{ + tab` that variable will be automatically shown 
+
 ### saving 
+ctrl+s or use the save tha is graphically shown above the send 
