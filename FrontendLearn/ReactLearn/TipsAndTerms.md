@@ -228,7 +228,7 @@ export default App
    # useEffect
 
     ```js 
-  useEffect(() => {}, [])   //here dependency array is empty so it will run the code for only once 
+    useEffect(() => {}, [])   //here dependency array is empty so it will run the code for only once 
     ```
 it is used with the api's. basically it conssit of three parts 
 1. arraoe function        --->1st argument 

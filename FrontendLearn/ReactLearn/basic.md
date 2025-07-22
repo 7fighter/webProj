@@ -1,17 +1,18 @@
-# Projet usign vite 
-
+# Projet using vite 
+Basically react is used in the frontend for its dynamic structure it is not used in the backend in the backend we use js if you are looking for the notes to read about the backend then go through the the basic folders and then check out the uber project repository
+## Frontend setup and file structure 
 So lets start from the start suppose you are done writting the backend now you are going to write the backend 
 1. From the cmd of vs code cd to the `uber-video` and run npm create vite@latest
    ```cmd 
-cd C:\Users\Hp\Documents\GitHub\uber-video> 
+    cd C:\Users\Hp\Documents\GitHub\uber-video> 
 
-npm create vite@latest
+    npm create vite@latest
    ```
 2. now it will ask you project name so set frontend this will create a folder named frontend under the uber-video folder 
 ```cmd
-Project name: frontend 
-select a framework: > React 
-select a variant: > JavaScript  
+  Project name: frontend 
+  select a framework: > React 
+  select a variant: > JavaScript  
 ```
 3. now change your directory to the frontend 
    ```cmd 
@@ -19,9 +20,7 @@ select a variant: > JavaScript
    ```
    till now these cmd are runs 
    ![baisc cmds](Images/basicCmd.png)
-   ```cmd 
-
-   ```
+ 
    ![before running the npm install](Images/beforeInstall.png)
 4. now runs two more cmd that are shown in the pic 
    ```cmd 
@@ -94,7 +93,7 @@ select a variant: > JavaScript
    `note` ctrl+ c to terminate the server from running  
 
 
-## Src/ 
+# Src/ 
 1. inside `src/app.jsx`, remove all the template code and write `rafce` and before that install `simple react snipest` 
 
 2. remove all the code from the `Src/index.css`
@@ -145,7 +144,7 @@ select a variant: > JavaScript
 
       ```
 
-## Pages Folder
+## "Pages" Folder insde src
 
 here make multiple files like
 
@@ -153,7 +152,7 @@ here make multiple files like
 2. usrlogin.jsx
 3. userSiginup.jsx
 
-## Routing
+## Routing Folder
 
 routing is done with the help of a app.jsx file
 

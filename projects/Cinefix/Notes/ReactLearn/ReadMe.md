@@ -1,14 +1,3 @@
-Based on the sources, while a comprehensive step-by-step guide to building the React application is provided, along with commands and code snippets, the sources **do not contain the complete, ready-to-run code for every single file from start to finish**. The video transcript describes the process and the logical components, often showing fragments or highlighting specific lines, rather than presenting entire, unedited file contents. To obtain the full, runnable project, the sources explicitly mention that **all of the code is available from a GitHub link in the video's description**.
-
-Therefore, I cannot provide the exact, full code as if it were directly copied from a finished project. However, I can reconstruct the primary logic and structure for each file as described and hinted at in the provided text, outlining the commands needed and the general content for each file.
-
-**Please note:**
-*   **CSS files are external:** The sources clearly state that the CSS files are provided separately via a GitHub link and are not included in the transcript. You would need to download these and place them in a `src/css` folder. I will only show the `import` statements for them.
-*   **API Key:** You will need to obtain your own API key from The Movie Database (TMDB).
-*   **Dependencies:** The sources detail the `npm install` commands for necessary packages.
-
----
-
 ### **Project Setup and Initialisation**
 
 1.  **Install Node.js**: This is the first requirement to work with React and use `npm` (Node Package Manager). Ensure it's added to your system path.
