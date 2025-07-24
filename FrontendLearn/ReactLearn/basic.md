@@ -1,5 +1,5 @@
 # Projet using vite 
-Basically react is used in the frontend for its dynamic structure it is not used in the backend in the backend we use js if you are looking for the notes to read about the backend then go through the the basic folders and then check out the uber project repository
+Basically react is used in the frontend for its dynamic structure it is not used in the backend in the backend we use js if you are looking for the notes to read about the backend then go through the the basic folders and then check out the uberproject repository at their both frontend and are disccussed in more deatil
 ## Frontend setup and file structure 
 So lets start from the start suppose you are done writting the backend now you are going to write the backend 
 1. From the cmd of vs code cd to the `uber-video` and run npm create vite@latest
