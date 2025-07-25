@@ -49,9 +49,10 @@ Register and login APIs
 
 Middleware to protect future routes
 
-## pahse 3 
+## pahse 3  
+
 🔜 Phase 3: User Role Access & Dashboard APIs
-In the next phase, we’ll:
+In the next phase, we will:
 
 Create protected routes for buyers and sellers
 
