@@ -10,6 +10,7 @@ export interface User {
   };
   contact?: string;
   avatar?: string;
+  token?: string; // <-- Add this line
 }
 
 export interface Request {

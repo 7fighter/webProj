@@ -42,7 +42,7 @@ const initialState: AppState = {
   notifications: []
 };
 
-const AppContext = createContext<{
+export const AppContext = createContext<{
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
 }>({ state: initialState, dispatch: () => {} });
