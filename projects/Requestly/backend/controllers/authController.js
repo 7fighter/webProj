@@ -5,7 +5,6 @@ const generateToken = require('../utils/generateToken');
 exports.registerUser = async (req, res) => {
   // console.log(req.body);
   const { name, email, password, role, location } = req.body;
-  console.log(name, email, password, role, location);
 
   try {
     const userExists = await User.findOne({ email });
