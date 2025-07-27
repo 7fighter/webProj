@@ -128,7 +128,7 @@ function App() {
                     Location
                   </label>
                   <p className="text-gray-600">
-                    {state.currentUser.location.address}
+                    {state.currentUser.location?.address ?? 'No address provided'}
                   </p>
                 </div>
 

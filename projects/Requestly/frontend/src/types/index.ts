@@ -87,3 +87,18 @@ export interface MapMarker {
   price?: number;
   budget?: number;
 }
+
+export interface FormDataType {
+  name?: string;
+  email: string;
+  password: string;
+  role?: 'buyer' | 'seller';
+  location?: string;
+}
+
+
+export interface AuthModalProps {
+  mode: 'login' | 'register';
+  onClose: () => void;
+  onSwitchMode: (mode: 'login' | 'register') => void;
+}
