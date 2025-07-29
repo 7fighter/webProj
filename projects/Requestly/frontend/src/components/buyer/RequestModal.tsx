@@ -1,64 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { X, MapPin, DollarSign, FileText } from 'lucide-react';
-import { useApp } from '../../context/AppContext';
-import { Request } from '../../types';
+import axios from 'axios';
+import { AppContext } from '../../context/AppContext';
 import { categories } from '../../data/categories';
+import {  CategoryType } from "../../types";
 
 interface RequestModalProps {
   onClose: () => void;
 }
 
 export default function RequestModal({ onClose }: RequestModalProps) {
-  const { state, dispatch } = useApp();
+  const { state, dispatch } = useContext(AppContext);
+  const user = state.currentUser;
+
   const [formData, setFormData] = useState({
-    category: 'food' as const,
+    category: 'food' as CategoryType,
     title: '',
     description: '',
     budget: '',
-    location: state.currentUser?.location.address || ''
+    location: user?.location?.address || ''
   });
   const [loading, setLoading] = useState(false);
-
+// handle submit 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!state.currentUser) return;
-
     setLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      const newRequest: Request = {
-        id: Date.now().toString(),
-        category: formData.category,
-        title: formData.title,
-        description: formData.description,
-        budget: parseFloat(formData.budget),
-        requesterId: state.currentUser!.id,
-        requesterName: state.currentUser!.name,
-        geoCoords: state.currentUser!.location,
-        address: formData.location,
-        timestamp: new Date().toISOString(),
-        status: 'active'
-      };
-
-      dispatch({ type: 'ADD_REQUEST', payload: newRequest });
-      
-      // Add notification
-      dispatch({
-        type: 'ADD_NOTIFICATION',
-        payload: {
-          id: Date.now().toString(),
-          type: 'request',
-          title: 'Request Posted',
-          message: `Your request for "${formData.title}" has been posted successfully.`,
-          timestamp: new Date().toISOString(),
-          read: false
+    try {
+      // console.log(user?.token)
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/requests`,
+        {
+          title: formData.title,
+          description: formData.description,
+          category: formData.category,
+          budget: Number(formData.budget), // Ensure budget is a number
+          location: formData.location
+        },
+        {
+          headers: { Authorization: `Bearer ${user?.token}` }
         }
-      });
+      );
+
+      dispatch({ type: 'ADD_REQUEST', payload: res.data }); // for resolving request issuse 
 
       setLoading(false);
       onClose();
-    }, 1000);
+    } catch (error: any) {
+      setLoading(false);
+      // Optionally show error message to user
+      alert(error.response?.data?.error || 'Failed to create request');
+    }
   };
 
   return (

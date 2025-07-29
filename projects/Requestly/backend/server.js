@@ -18,6 +18,8 @@ const io = socketIo(server, {
   cors: { origin: '*', methods: ['GET', 'POST'] }
 });
 
+app.set('io', io); // <-- Add this line
+
 app.use(cors());
 app.use(express.json());
 

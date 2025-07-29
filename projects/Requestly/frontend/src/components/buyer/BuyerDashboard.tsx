@@ -13,6 +13,7 @@ export default function BuyerDashboard() {
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showRequestsModal, setShowRequestsModal] = useState(false);
 
   // Filter deals based on category and search
   const filteredDeals = state.deals.filter(deal => {
@@ -81,6 +82,14 @@ export default function BuyerDashboard() {
             <Plus className="w-5 h-5" />
             <span>New Request</span>
           </button>
+
+          {/* My Requests Button */}
+          <button
+            onClick={() => setShowRequestsModal(true)}
+            className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all flex items-center space-x-2 whitespace-nowrap"
+          >
+            <span>My Requests</span>
+          </button>
         </div>
       </div>
 
@@ -148,6 +157,34 @@ export default function BuyerDashboard() {
           deal={selectedDeal}
           onClose={() => setSelectedDeal(null)}
         />
+      )}
+
+      {/* show previous request */}
+      {showRequestsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto p-6">
+            <h3 className="text-xl font-semibold mb-4">My Previous Requests</h3>
+            {state.requests.length === 0 ? (
+              <p className="text-gray-500">No requests found.</p>
+            ) : (
+              <ul className="space-y-4">
+                {state.requests.map(req => (
+                  <li key={req.id} className="border-b pb-2">
+                    <div className="font-bold">{req.title}</div>
+                    <div className="text-sm text-gray-600">{req.description}</div>
+                    <div className="text-xs text-gray-400">{new Date(req.timestamp).toLocaleString()}</div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <button
+              onClick={() => setShowRequestsModal(false)}
+              className="mt-4 px-4 py-2 bg-purple-500 text-white rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

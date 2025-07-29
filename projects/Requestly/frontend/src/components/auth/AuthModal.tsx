@@ -28,8 +28,11 @@ export default function AuthModal({
         formData
       );
       const { token, user } = res.data;
+      // console.log(token)
+      user.token = token;
       localStorage.setItem("token", token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      dispatch({ type: "LOGIN", payload: user });
       return user;
     } catch (error: any) {
       setErrorMsg(error.response?.data?.message || "Registration failed");
@@ -52,7 +55,12 @@ export default function AuthModal({
       );
       const { token, user } = res.data;
       localStorage.setItem("token", token);
+      // console.log(token)
+       user.token = token;
+      //  console.log(user.token)
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      dispatch({ type: "LOGIN", payload: user });
+
       return user;
     } catch (error: any) {
       setErrorMsg(error.response?.data?.message || "Invalid credentials");

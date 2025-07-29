@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { MapMarker, Request } from '../../types';
@@ -6,12 +6,16 @@ import Map from '../common/Map';
 import DealModal from './DealModal';
 import RequestDetailsModal from './RequestDetailsModal';
 import { categories } from '../../data/categories';
+import { io } from 'socket.io-client';
+
+const socket = io(import.meta.env.VITE_BASE_URL);
 
 export default function SellerDashboard() {
-  const { state } = useApp();
+  const { state, dispatch } = useApp();
   const [showDealModal, setShowDealModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
   const [editingDeal, setEditingDeal] = useState(null);
+  const [newRequestPopup, setNewRequestPopup] = useState<Request | null>(null);
 
   // Get seller's deals
   const myDeals = state.deals.filter(deal => deal.sellerId === state.currentUser?.id);
@@ -34,6 +38,27 @@ export default function SellerDashboard() {
       setSelectedRequest(request);
     }
   };
+
+  useEffect(() => {
+    socket.on('newRequest', (request) => {
+      setNewRequestPopup(request);
+      dispatch({
+        type: 'ADD_NOTIFICATION',
+        payload: {
+          id: Date.now().toString(),
+          type: 'request',
+          title: 'New Buyer Request',
+          message: `A new request for "${request.title}" has been posted.`,
+          timestamp: new Date().toISOString(),
+          read: false
+        }
+      });
+    });
+
+    return () => {
+      socket.off('newRequest');
+    };
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
@@ -156,6 +181,13 @@ export default function SellerDashboard() {
         <RequestDetailsModal
           request={selectedRequest}
           onClose={() => setSelectedRequest(null)}
+        />
+      )}
+
+      {newRequestPopup && (
+        <RequestDetailsModal
+          request={newRequestPopup}
+          onClose={() => setNewRequestPopup(null)}
         />
       )}
     </div>

@@ -4,6 +4,7 @@ const Request = require('../models/Request');
 exports.createRequest = async (req, res) => {
   try {
     const { title, description, category, budget } = req.body;
+    // console.log(req.body)
     const request = await Request.create({
       title,
       description,
@@ -11,6 +12,8 @@ exports.createRequest = async (req, res) => {
       budget,
       createdBy: req.user.id
     });
+    const io = req.app.get('io'); // Make sure you set io in your app.js/server.js
+    io.emit('newRequest', request); // Broadcast to all sellers
     res.status(201).json(request);
   } catch (err) {
     res.status(500).json({ error: err.message });
