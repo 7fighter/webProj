@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import axios from 'axios';
 import { User, Request, Deal, Chat, Message } from '../types';
 import { mockUsers, mockRequests, mockDeals, mockChats } from '../data/mockData';
 
@@ -30,7 +31,8 @@ type AppAction =
   | { type: 'SELECT_CHAT'; payload: string | null }
   | { type: 'MARK_MESSAGES_READ'; payload: string }
   | { type: 'ADD_NOTIFICATION'; payload: Notification }
-  | { type: 'MARK_NOTIFICATION_READ'; payload: string };
+  | { type: 'MARK_NOTIFICATION_READ'; payload: string }
+  | { type: 'SET_REQUESTS'; payload: Request[] };
 
 const initialState: AppState = {
   currentUser: null,
@@ -100,6 +102,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
           notif.id === action.payload ? { ...notif, read: true } : notif
         )
       };
+    case 'SET_REQUESTS':
+      return { ...state, requests: action.payload };
     default:
       return state;
   }
@@ -108,12 +112,26 @@ function appReducer(state: AppState, action: AppAction): AppState {
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
+  // Fetch requests for the logged-in user
+  const fetchMyRequests = async (token: string) => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/requests/mine`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Replace all requests with the ones from backend
+      dispatch({ type: 'SET_REQUESTS', payload: res.data });
+    } catch (err) {
+      // Optionally handle error
+    }
+  };
+
   // Load user from localStorage on mount
   useEffect(() => {
     const savedUser = localStorage.getItem('requestly_user');
     if (savedUser) {
       const user = JSON.parse(savedUser);
       dispatch({ type: 'LOGIN', payload: user });
+      if (user.token) fetchMyRequests(user.token);
     }
   }, []);
 
@@ -121,6 +139,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (state.currentUser) {
       localStorage.setItem('requestly_user', JSON.stringify(state.currentUser));
+      if (state.currentUser.token) fetchMyRequests(state.currentUser.token);
     } else {
       localStorage.removeItem('requestly_user');
     }

@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { Plus, Filter, Search } from 'lucide-react';
+import { Plus, Filter, Search, Pencil, Trash2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { MapMarker, Deal, Request } from '../../types';
 import Map from '../common/Map';
 import RequestModal from './RequestModal';
 import DealDetailsModal from './DealDetailsModal';
 import { categories } from '../../data/categories';
+import axios from 'axios';
 
 export default function BuyerDashboard() {
-  const { state } = useApp();
+  const { state, dispatch } = useApp();
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showRequestsModal, setShowRequestsModal] = useState(false);
+
+  // Add state for editing
+  const [editingRequest, setEditingRequest] = useState<Request | null>(null);
 
   // Filter deals based on category and search
   const filteredDeals = state.deals.filter(deal => {
@@ -37,6 +41,31 @@ export default function BuyerDashboard() {
     const deal = state.deals.find(d => d.id === marker.id);
     if (deal) {
       setSelectedDeal(deal);
+    }
+  };
+
+  // Edit handler
+  const handleEdit = (req: Request) => {
+    // console.log(req)
+    // console.log(req._id) // shows the id of req on console
+    setEditingRequest(req);
+
+    // v(req);
+  };
+
+  // Delete handler
+  const handleDelete = async (reqId: string) => {
+    // console.log(reqId)
+    if (!window.confirm('Are you sure you want to delete this request?')) return;
+    try {
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/requests/${reqId}`, {
+        headers: { Authorization: `Bearer ${state.currentUser?.token}` }
+      });
+      // Remove from state
+      // dispatch({ type: 'SET_REQUESTS', payload: state.requests.filter(r => r._id !== reqId) });
+      dispatch({ type: 'SET_REQUESTS', payload: state.requests.filter(r => r.id !== reqId) });
+    } catch (err) {
+      alert('Failed to delete request');
     }
   };
 
@@ -169,10 +198,26 @@ export default function BuyerDashboard() {
             ) : (
               <ul className="space-y-4">
                 {state.requests.map(req => (
-                  <li key={req.id} className="border-b pb-2">
-                    <div className="font-bold">{req.title}</div>
-                    <div className="text-sm text-gray-600">{req.description}</div>
-                    <div className="text-xs text-gray-400">{new Date(req.timestamp).toLocaleString()}</div>
+                  <li key={req.id} className="border-b pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div>
+                      <div className="font-bold">{req.title}</div>
+                      <div className="text-sm text-gray-600">{req.description}</div>
+                      <div className="text-xs text-gray-400">{new Date(req.timestamp).toLocaleString()}</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(req)}
+                        className="flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                      >
+                        <Pencil className="w-4 h-4 mr-1" /> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(req.id)}
+                        className="flex items-center px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition"
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" /> Delete
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -184,6 +229,14 @@ export default function BuyerDashboard() {
               Close
             </button>
           </div>
+          {/* Edit Modal */}
+          {editingRequest && (
+            <RequestModal
+              onClose={() => setEditingRequest(null)}
+              initialData={editingRequest}
+              isEdit={true}
+            />
+          )}
         </div>
       )}
     </div>

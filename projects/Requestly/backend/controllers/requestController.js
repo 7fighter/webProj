@@ -28,3 +28,38 @@ exports.getBuyerRequests = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Update a request (PUT /api/requests/:id)
+exports.updateRequest = async (req, res) => {
+  try {
+    const request = await Request.findOneAndUpdate(
+      { _id: req.params.id, createdBy: req.user.id },
+      {
+        title: req.body.title,
+        description: req.body.description,
+        category: req.body.category,
+        budget: req.body.budget,
+        location: req.body.location
+      },
+      { new: true }
+    );
+    if (!request) return res.status(404).json({ error: 'Request not found' });
+    res.json(request);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Delete a request (DELETE /api/requests/:id)
+exports.deleteRequest = async (req, res) => {
+  try {
+    const request = await Request.findOneAndDelete({
+      _id: req.params.id,
+      createdBy: req.user.id
+    });
+    if (!request) return res.status(404).json({ error: 'Request not found' });
+    res.json({ message: 'Request deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

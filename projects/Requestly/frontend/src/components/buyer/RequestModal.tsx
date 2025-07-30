@@ -1,54 +1,90 @@
-import React, { useState, useContext } from 'react';
-import { X, MapPin, DollarSign, FileText } from 'lucide-react';
-import axios from 'axios';
-import { AppContext } from '../../context/AppContext';
-import { categories } from '../../data/categories';
-import {  CategoryType } from "../../types";
+import React, { useState, useContext } from "react";
+import { X, MapPin, DollarSign, FileText } from "lucide-react";
+import axios from "axios";
+import { AppContext } from "../../context/AppContext";
+import { categories } from "../../data/categories";
+import { CategoryType } from "../../types";
 
 interface RequestModalProps {
   onClose: () => void;
+  initialData?: Partial<Request>;
+  isEdit?: boolean;
 }
 
-export default function RequestModal({ onClose }: RequestModalProps) {
+export default function RequestModal({
+  onClose,
+  initialData,
+  isEdit,
+}: RequestModalProps) {
   const { state, dispatch } = useContext(AppContext);
   const user = state.currentUser;
 
   const [formData, setFormData] = useState({
-    category: 'food' as CategoryType,
-    title: '',
-    description: '',
-    budget: '',
-    location: user?.location?.address || ''
+    category: initialData?.category || "food",
+    title: initialData?.title || "",
+    description: initialData?.description || "",
+    budget: initialData?.budget?.toString() || "",
+    location: initialData?.location || user?.location?.address || "",
   });
   const [loading, setLoading] = useState(false);
-// handle submit 
+  // handle submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
     try {
-      // console.log(user?.token)
-      const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/requests`,
+      if (isEdit && (initialData?._id || initialData?.id)) {
+        await axios.put(
+          `${import.meta.env.VITE_BASE_URL}/api/requests/${initialData?._id || initialData?.id}`,
+          {
+            title: formData.title,
+            description: formData.description,
+            category: formData.category,
+            budget: Number(formData.budget),
+            location: formData.location,
+          },
+          {
+            headers: { Authorization: `Bearer ${user?.token}` },
+          }
+        );
+      } else {
+        // Create request (existing code)
+        const res = await axios.post(
+          `${import.meta.env.VITE_BASE_URL}/api/requests`,
+          {
+            title: formData.title,
+            description: formData.description,
+            category: formData.category,
+            budget: Number(formData.budget),
+            location: formData.location,
+          },
+          {
+            headers: { Authorization: `Bearer ${user?.token}` },
+          }
+        );
+      }
+
+      // Re-fetch requests
+      const reqRes = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/requests/mine`,
         {
-          title: formData.title,
-          description: formData.description,
-          category: formData.category,
-          budget: Number(formData.budget), // Ensure budget is a number
-          location: formData.location
-        },
-        {
-          headers: { Authorization: `Bearer ${user?.token}` }
+          headers: { Authorization: `Bearer ${user.token}` },
         }
       );
 
-      dispatch({ type: 'ADD_REQUEST', payload: res.data }); // for resolving request issuse 
+      // Normalize _id to id
+      const normalizedRequests = reqRes.data.map((r: any) => ({
+        ...r,
+        id: r._id,
+      }));
+      dispatch({ type: "SET_REQUESTS", payload: normalizedRequests });
 
       setLoading(false);
       onClose();
     } catch (error: any) {
       setLoading(false);
       // Optionally show error message to user
-      alert(error.response?.data?.error || 'Failed to create request');
+      alert(error.response?.data?.error || "Failed to save request");
     }
   };
 
@@ -57,7 +93,9 @@ export default function RequestModal({ onClose }: RequestModalProps) {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg transform transition-all max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">Create New Request</h2>
+          <h2 className="text-2xl font-bold text-gray-900">
+            {isEdit ? "Edit" : "Create New"} Request
+          </h2>
           <button
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600 rounded-lg transition-colors"
@@ -74,19 +112,23 @@ export default function RequestModal({ onClose }: RequestModalProps) {
               Category
             </label>
             <div className="grid grid-cols-2 gap-3">
-              {categories.map(category => (
+              {categories.map((category) => (
                 <button
                   key={category.id}
                   type="button"
-                  onClick={() => setFormData({ ...formData, category: category.id })}
+                  onClick={() =>
+                    setFormData({ ...formData, category: category.id })
+                  }
                   className={`p-4 rounded-xl border-2 transition-all ${
                     formData.category === category.id
-                      ? 'border-purple-500 bg-purple-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? "border-purple-500 bg-purple-50"
+                      : "border-gray-200 hover:border-gray-300"
                   }`}
                 >
                   <div className="text-2xl mb-2">{category.emoji}</div>
-                  <div className="text-sm font-medium text-gray-900">{category.name}</div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {category.name}
+                  </div>
                 </button>
               ))}
             </div>
@@ -102,7 +144,9 @@ export default function RequestModal({ onClose }: RequestModalProps) {
               <input
                 type="text"
                 value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="e.g., Fresh pizza delivery, Car rental for weekend"
                 required
@@ -117,7 +161,9 @@ export default function RequestModal({ onClose }: RequestModalProps) {
             </label>
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
               rows={3}
               placeholder="Provide more details about what you're looking for..."
@@ -135,7 +181,9 @@ export default function RequestModal({ onClose }: RequestModalProps) {
               <input
                 type="number"
                 value={formData.budget}
-                onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, budget: e.target.value })
+                }
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="Enter your budget"
                 min="0"
@@ -155,7 +203,9 @@ export default function RequestModal({ onClose }: RequestModalProps) {
               <input
                 type="text"
                 value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, location: e.target.value })
+                }
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 placeholder="Enter your location"
                 required
@@ -169,7 +219,11 @@ export default function RequestModal({ onClose }: RequestModalProps) {
             disabled={loading}
             className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           >
-            {loading ? 'Creating Request...' : 'Post Request'}
+            {loading
+              ? "Saving Request..."
+              : isEdit
+              ? "Update Request"
+              : "Post Request"}
           </button>
         </form>
       </div>
