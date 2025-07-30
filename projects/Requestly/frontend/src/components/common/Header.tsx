@@ -35,7 +35,10 @@ export default function Header({ onOpenNotifications, onOpenProfile, onOpenChat 
         <div className="flex items-center space-x-4">
           {/* Chat */}
           <button
-            onClick={onOpenChat}
+            onClick={() => {
+    // console.log("Header chat button clicked!"); // Add this line
+    onOpenChat?.(); // Call the prop if it exists
+  }}
             className="relative p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
           >
             <MessageCircle className="w-5 h-5" />

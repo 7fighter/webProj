@@ -1,44 +1,46 @@
-import React, { useState } from 'react';
-import { Plus, Filter, Search, Pencil, Trash2 } from 'lucide-react';
-import { useApp } from '../../context/AppContext';
-import { MapMarker, Deal, Request } from '../../types';
-import Map from '../common/Map';
-import RequestModal from './RequestModal';
-import DealDetailsModal from './DealDetailsModal';
-import { categories } from '../../data/categories';
-import axios from 'axios';
+import React, { useState } from "react";
+import { Plus, Filter, Search, Pencil, Trash2 } from "lucide-react";
+import { useApp } from "../../context/AppContext";
+import { MapMarker, Deal, Request } from "../../types";
+import Map from "../common/Map";
+import RequestModal from "./RequestModal";
+import DealDetailsModal from "./DealDetailsModal";
+import { categories } from "../../data/categories";
+import axios from "axios";
 
 export default function BuyerDashboard() {
   const { state, dispatch } = useApp();
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [showRequestsModal, setShowRequestsModal] = useState(false);
 
   // Add state for editing
   const [editingRequest, setEditingRequest] = useState<Request | null>(null);
 
   // Filter deals based on category and search
-  const filteredDeals = state.deals.filter(deal => {
-    const matchesCategory = selectedCategory === 'all' || deal.category === selectedCategory;
-    const matchesSearch = deal.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         deal.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch && deal.status === 'active';
+  const filteredDeals = state.deals.filter((deal) => {
+    const matchesCategory =
+      selectedCategory === "all" || deal.category === selectedCategory;
+    const matchesSearch =
+      deal.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      deal.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch && deal.status === "active";
   });
 
   // Create map markers from deals
-  const mapMarkers: MapMarker[] = filteredDeals.map(deal => ({
+  const mapMarkers: MapMarker[] = filteredDeals.map((deal) => ({
     id: deal.id,
-    type: 'deal',
+    type: "deal",
     category: deal.category,
     position: deal.geoCoords,
     title: deal.title,
-    price: deal.price
+    price: deal.price,
   }));
 
   const handleMarkerClick = (marker: MapMarker) => {
-    const deal = state.deals.find(d => d.id === marker.id);
+    const deal = state.deals.find((d) => d.id === marker.id);
     if (deal) {
       setSelectedDeal(deal);
     }
@@ -56,16 +58,23 @@ export default function BuyerDashboard() {
   // Delete handler
   const handleDelete = async (reqId: string) => {
     // console.log(reqId)
-    if (!window.confirm('Are you sure you want to delete this request?')) return;
+    if (!window.confirm("Are you sure you want to delete this request?"))
+      return;
     try {
-      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/requests/${reqId}`, {
-        headers: { Authorization: `Bearer ${state.currentUser?.token}` }
-      });
+      await axios.delete(
+        `${import.meta.env.VITE_BASE_URL}/api/requests/${reqId}`,
+        {
+          headers: { Authorization: `Bearer ${state.currentUser?.token}` },
+        }
+      );
       // Remove from state
       // dispatch({ type: 'SET_REQUESTS', payload: state.requests.filter(r => r._id !== reqId) });
-      dispatch({ type: 'SET_REQUESTS', payload: state.requests.filter(r => r.id !== reqId) });
+      dispatch({
+        type: "SET_REQUESTS",
+        payload: state.requests.filter((r) => r.id !== reqId),
+      });
     } catch (err) {
-      alert('Failed to delete request');
+      alert("Failed to delete request");
     }
   };
 
@@ -95,7 +104,7 @@ export default function BuyerDashboard() {
               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
             >
               <option value="all">All Categories</option>
-              {categories.map(category => (
+              {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.emoji} {category.name}
                 </option>
@@ -143,12 +152,16 @@ export default function BuyerDashboard() {
           <div className="flex-1 overflow-y-auto">
             {filteredDeals.length === 0 ? (
               <div className="p-4 text-center">
-                <p className="text-gray-500">No deals found matching your criteria.</p>
+                <p className="text-gray-500">
+                  No deals found matching your criteria.
+                </p>
               </div>
             ) : (
               <div className="space-y-3 p-4">
-                {filteredDeals.map(deal => {
-                  const category = categories.find(c => c.id === deal.category);
+                {filteredDeals.map((deal) => {
+                  const category = categories.find(
+                    (c) => c.id === deal.category
+                  );
                   return (
                     <div
                       key={deal.id}
@@ -158,11 +171,17 @@ export default function BuyerDashboard() {
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center space-x-2">
                           <span className="text-lg">{category?.emoji}</span>
-                          <h4 className="font-medium text-gray-900 truncate">{deal.title}</h4>
+                          <h4 className="font-medium text-gray-900 truncate">
+                            {deal.title}
+                          </h4>
                         </div>
-                        <span className="text-lg font-bold text-green-600">${deal.price}</span>
+                        <span className="text-lg font-bold text-green-600">
+                          ${deal.price}
+                        </span>
                       </div>
-                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">{deal.description}</p>
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                        {deal.description}
+                      </p>
                       <div className="flex items-center justify-between text-xs text-gray-500">
                         <span>{deal.sellerName}</span>
                         <span>{deal.address}</span>
@@ -197,12 +216,19 @@ export default function BuyerDashboard() {
               <p className="text-gray-500">No requests found.</p>
             ) : (
               <ul className="space-y-4">
-                {state.requests.map(req => (
-                  <li key={req.id} className="border-b pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                {state.requests.map((req) => (
+                  <li
+                    key={req.id}
+                    className="border-b pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                  >
                     <div>
                       <div className="font-bold">{req.title}</div>
-                      <div className="text-sm text-gray-600">{req.description}</div>
-                      <div className="text-xs text-gray-400">{new Date(req.timestamp).toLocaleString()}</div>
+                      <div className="text-sm text-gray-600">
+                        {req.description}
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {new Date(req.timestamp).toLocaleString()}
+                      </div>
                     </div>
                     <div className="flex gap-2">
                       <button

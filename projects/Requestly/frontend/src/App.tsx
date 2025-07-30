@@ -20,7 +20,10 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header
-        onOpenChat={() => setShowChat(true)}
+  onOpenChat={() => {
+          // console.log("Chat button clicked! Setting showChat to true."); // Add this line
+          setShowChat(true);
+        }}        
         onOpenNotifications={() => setShowNotifications(true)}
         onOpenProfile={() => setShowProfile(true)}
       />
@@ -32,9 +35,8 @@ function App() {
       )}
 
       {/* Chat System */}
-      {showChat && selectedDealId && (
+      {showChat && (
         <ChatSystem
-          dealId={selectedDealId}
           onClose={() => setShowChat(false)}
         />
       )}
